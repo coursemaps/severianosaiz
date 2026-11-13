@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Severiano Saiz | Golf + Creative Direction + Strategy + Content Production</title>
+  <meta name="description" content="Golf creative direction, strategy and full service content production.">
+  <style>
+    /* =========================================================
+       SETTINGS: change colours and fonts here
+       ========================================================= */
+    :root {
+      --bg: #f6f3ef;            /* page background */
+      --ink: #1a1a1a;
+      --navy: #132e73;
+      --highlight: #fff35c;      /* highlighter yellow behind “winning digital strategy” */
+      --white: #ffffff;
+      --rule: #1a1a1a;
+      --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --page-pad: 4vw;           /* outer page margin */
+      --head-max: 24;            /* largest heading size in px; change to make all headings bigger or smaller */
+      --sidebar: 21%;            /* width of left name/nav column */
+      --head-size: min(1.9vw, 24px);        /* every heading uses this size; script fits it to the tagline */
+      --title-gap: 2.5rem;       /* space between a section heading and its content */
+      --section-gap: 4rem;       /* space between the end of one section and the next heading */
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--navy);
+      outline-offset: 3px;
+    }
+    img, video { display: block; max-width: 100%; }
+
+    /* =========================================================
+       PAGE LAYOUT: left column (name + nav) and main column
+       ========================================================= */
+    .page {
+      padding: 3.75rem var(--page-pad) 0;
+    }
+    .top-rule, .bottom-rule {
+      height: 1px;
+      background: var(--rule);
+      transform-origin: left;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 1rem;
+      align-self: start;
+    }
+    /* Name + tagline: identical font and size, on one baseline.
+       The name sits in the left column; the tagline starts at the
+       left edge of the content column, lined up with the video. */
+    .masthead {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      align-items: baseline;
+      margin: 0.6rem 0 1.1rem;
+    }
+    .heading,
+    .name,
+    .tagline {
+      font-family: var(--font);
+      font-size: var(--head-size);
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0;
+      color: var(--ink);
+      margin: 0;
+    }
+    .name, .tagline { white-space: nowrap; justify-self: start; }
+    .tagline { justify-self: center; }   /* centred over the video */
+    .nav { display: flex; flex-direction: column; gap: 0.35rem; }
+    .nav a {
+      font-size: 0.92rem;
+      font-weight: 300;
+      width: fit-content;
+      background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
+      transition: background-size 0.3s ease;
+    }
+    .nav a:hover, .nav a.active { background-size: 100% 1px; }
+
+    main { min-width: 0; }
+
+
+    .section-title { text-align: center; }
+
+    /* =========================================================
+       HERO VIDEO
+       ========================================================= */
+    .hero-frame {
+      background: var(--white);
+      padding: 10px;
+    }
+    .hero-inner {
+      position: relative;
+      aspect-ratio: 16 / 9;       /* matches the video exactly, so its border is never cropped */
+      overflow: hidden;
+      background: #3b4a3a;
+    }
+    .hero-inner video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* =========================================================
+       LOGOS: scattered layout on desktop, simple grid on mobile
+       Each logo has three settings:
+         --x  where its centre sits, left to right (in %)
+         --y  how far down it sits (0 = top row, 100 = bottom row)
+         --w  how wide it is (wide wordmarks wider, square marks narrower,
+              so they all look about the same size)
+       ========================================================= */
+    .logos {
+      --logo-h: 3.2rem;          /* tallest a logo can be */
+      --logos-h: 17.5rem;        /* height of the whole logo area */
+      position: relative;
+      height: var(--logos-h);
+      margin: var(--title-gap) 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .logos li {
+      position: absolute;
+      left: calc(var(--x) - var(--w) / 2);
+      top: calc(var(--y) / 100 * (var(--logos-h) - var(--logo-h)));
+      width: var(--w);
+      height: var(--logo-h);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logos img {
+      width: 100%;
+      height: auto;
+      max-height: var(--logo-h);
+      object-fit: contain;
+    }
+    .logo-placeholder { font-size: 1.35rem; }
+
+    /* =========================================================
+       VENN DIAGRAM
+       ========================================================= */
+    .venn {
+      width: min(100%, 640px);
+      margin: var(--title-gap) auto 0;
+    }
+    .venn svg { width: 100%; height: auto; overflow: visible; }
+    .venn path {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: var(--venn-stroke, 1.25);  /* script keeps this at 1.25 screen pixels */
+      stroke-linecap: round;
+      shape-rendering: geometricPrecision;
+    }
+    .venn text {
+      font-family: var(--font);
+      font-weight: 300;
+      font-size: 18px;   /* each block is placed so its margins to the circle lines are even */
+      fill: var(--ink);
+    }
+    .venn text.center { font-size: 16px; }   /* the middle region is smallest, so a touch smaller keeps its margins even */
+
+    /* =========================================================
+       SELECTED PROJECTS
+       ========================================================= */
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      column-gap: 1.5rem;
+      row-gap: 0;
+      margin-top: var(--title-gap);
+      container-type: inline-size;
+      --col: calc((100cqi - 4.5rem) / 4);   /* width of one project column */
+    }
+    /* Each project shares the same row lines (video, title, type,
+       description, results), so every part lines up across columns. */
+    .project {
+      display: grid;
+      grid-row: span 5;
+      grid-template-rows: subgrid;
+      align-content: start;
+    }
+    .project-card {
+      position: relative;
+      display: block;
+      aspect-ratio: 1 / 1;
+      background: var(--navy);
+      color: var(--white);
+      overflow: hidden;
+    }
+    .project-card img, .project-card video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    a.project-card:hover img, a.project-card:hover video { transform: scale(1.04); }
+    .project-label {
+      position: relative;
+      display: block;
+      padding: 20% 18% 0 20%;
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+    .project h3 {
+      font-size: 18px;
+      font-size: min(18px, calc(var(--col) * 0.084));   /* shrinks with the column so titles fit on 2 lines */
+      line-height: 1.2;
+      min-height: 2.4em;              /* always 2 lines tall, so everything below lines up */
+      margin: 1rem 0 0.5rem 0.1rem;
+    }
+    .project p {
+      font-size: 0.92rem;
+      font-weight: 300;
+      line-height: 1.45;
+      margin: 0 0 1rem 0.35rem;
+    }
+    .project .project-type { font-weight: 300; font-style: italic; margin-bottom: 0.6rem; }   /* Helvetica Neue Light Italic */
+    .project .metrics { margin-top: 1.25rem; }
+    a.text-link {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+    a.text-link:hover { text-decoration-thickness: 2px; }
+    .project p:last-child { margin-bottom: 0; }
+
+    /* =========================================================
+       CONTACT
+       ========================================================= */
+    .contact form {
+      width: min(100%, 640px);
+      margin: var(--title-gap) auto 0;
+    }
+
+    /* =========================================================
+       ABOUT
+       ========================================================= */
+    .about {
+      display: grid;
+      grid-template-columns: 38% minmax(0, 1fr);
+      gap: 0;
+      margin-top: var(--title-gap);
+      align-items: start;
+    }
+    .about-photo {
+      width: 82%;
+      aspect-ratio: 1200 / 1500;  /* matches the photo, so nothing is cropped */
+      background: var(--sand-photo, #ddd5c2);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 300;
+      font-size: 0.92rem;
+      color: #555;
+    }
+    .about-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .about-text p {
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 60ch;
+      margin: 0 0 1.1rem;
+    }
+    .about-text p:last-child { margin-bottom: 0; }
+
+    /* Even spacing: every section is separated by the same gap */
+    .logos-section,
+    .venn-section,
+    .projects-section,
+    .about-section,
+    .contact { padding-top: var(--section-gap); }
+    .contact { padding-bottom: var(--section-gap); }
+    .contact form { display: flex; flex-direction: column; gap: 0.6rem; }
+    .contact input, .contact textarea {
+      width: 100%;
+      font: 300 0.95rem var(--font);
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      padding: 0.65rem 0.6rem;
+    }
+    .contact textarea { height: 10.5rem; resize: vertical; }
+    .contact ::placeholder { color: #555; opacity: 1; }
+    .contact button {
+      align-self: flex-end;
+      font: 400 0.95rem var(--font);
+      color: var(--ink);
+      background: none;
+      border: 0;
+      padding: 0.25rem 0;
+      cursor: pointer;
+      background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+    }
+    .contact button:hover { color: var(--navy); }
+    .form-status { font-size: 0.9rem; font-weight: 300; margin: 0; min-height: 1.2em; }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+    .footer { padding: 1rem 0 5rem; }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;   /* icons on the left edge, copyright on the right */
+      gap: 2rem;
+    }
+    .socials { display: flex; align-items: center; gap: 1.75rem; margin: 0; padding: 0; list-style: none; }
+    .socials a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .socials svg { width: 1.6rem; height: 1.6rem; fill: currentColor; display: block; }
+    .socials .ig { fill: none; stroke: currentColor; stroke-width: 1.7; }
+    .socials .ig .dot { fill: currentColor; stroke: none; }
+    .socials a:hover { color: var(--navy); }
+    .footer-text { font-size: 0.8rem; font-weight: 300; color: #6b6b66; white-space: nowrap; }
+
+    /* =========================================================
+       SCROLL ANIMATIONS
+       Elements with .reveal fade up when they scroll into view.
+       Only active when JavaScript runs (html.js).
+       ========================================================= */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2,.7,.2,1);
+      transition-delay: var(--delay, 0s);
+    }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    .js .top-rule, .js .bottom-rule { transform: scaleX(0); transition: transform 1.4s cubic-bezier(.6,0,.2,1); }
+    .js .top-rule.in, .js .bottom-rule.in { transform: scaleX(1); }
+
+    /* Venn: circles draw themselves, then text fades in */
+    /* Each circle is one path starting at its top. The dash is longer
+       than the circle (1175), so once drawn there's no seam or gap. */
+    .js .venn path {
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+      transition: stroke-dashoffset 1.6s cubic-bezier(.6,0,.2,1);
+    }
+    .js .venn path:nth-of-type(2) { transition-delay: 0.3s; }
+    .js .venn path:nth-of-type(3) { transition-delay: 0.6s; }
+    .js .venn text { opacity: 0; transition: opacity 0.8s ease; }
+    .js .venn .t1 { transition-delay: 1.4s; }
+    .js .venn .t2 { transition-delay: 1.6s; }
+    .js .venn .t3 { transition-delay: 1.8s; }
+    .js .venn .center { transition-delay: 2.3s; }
+    .js .venn.in path { stroke-dashoffset: 0; }
+    /* Once drawn, drop the dash entirely so each circle is one clean, solid line */
+    .js .venn.done path { stroke-dasharray: none; transition: none; }
+    .js .venn.in text { opacity: 1; }
+
+    /* Highlighter: a soft green band sweeps in behind each line of text */
+    .venn-hl line {
+      stroke: var(--highlight);
+      stroke-linecap: butt;
+      stroke-dasharray: var(--len);
+      stroke-dashoffset: var(--len);
+      transition: stroke-dashoffset 0.6s cubic-bezier(.5,0,.2,1);
+      transition-delay: var(--delay, 0s);
+    }
+    .venn.in .venn-hl line { stroke-dashoffset: 0; }
+    .venn-hl.instant line { transition: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js .reveal, .js .top-rule, .js .bottom-rule, .js .venn path, .js .venn text, .venn-hl line {
+        transition: none !important; opacity: 1 !important; transform: none !important; stroke-dashoffset: 0 !important;
+      }
+    }
+
+    /* =========================================================
+       TABLET + MOBILE
+       ========================================================= */
+    @media (max-width: 900px) {
+      .about { grid-template-columns: 1fr 1.4fr; gap: 1.5rem; }
+      .about-photo { width: 100%; }
+      .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.25rem; --col: calc((100cqi - 1.25rem) / 2); }
+      .project:nth-child(n+3) { margin-top: 2.5rem; }
+    }
+    @media (max-width: 720px) {
+      :root { --page-pad: 5vw; }
+      .page { padding-top: 1.5rem; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        padding: 0.25rem 0 1rem;
+      }
+      .nav { flex-direction: row; gap: 1rem; }
+      :root { --head-size: 1.15rem !important; }
+      .masthead { grid-template-columns: 1fr; gap: 0.4rem; margin-bottom: 0.25rem; }
+      .name, .tagline { white-space: normal; }
+      :root { --title-gap: 1.75rem; --section-gap: 3rem; }
+      .about { grid-template-columns: 1fr; gap: 1.5rem; }
+      .about-photo { width: 100%; }
+      .logos {
+        --logo-h: 3rem;
+        position: static;
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.75rem 1rem;
+        justify-items: center;
+        align-items: center;
+      }
+      .logos li { position: static; width: calc(var(--w) * 0.62); }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .socials { gap: 1.5rem; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+<div class="page" id="top">
+
+  <div class="top-rule"></div>
+
+  <!-- Name + tagline: kept on one line and resized to fit the page -->
+  <header class="masthead" data-fit>
+    <a class="name" href="#top" data-top>Severiano Saiz</a>
+    <p class="tagline">golf + creative direction + strategy + full service content production</p>
+  </header>
+
+  <div class="layout">
+
+    <!-- =====================================================
+         LEFT COLUMN: navigation (sticks while scrolling)
+         ===================================================== -->
+    <aside class="sidebar">
+      <nav class="nav" aria-label="Main">
+        <a href="#top" data-top>Home</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </aside>
+
+    <main>
+
+      <!-- =====================================================
+           HERO VIDEO
+           Put your video file next to index.html and set src below.
+           ===================================================== -->
+      <section class="hero reveal" aria-label="Showreel">
+        <div class="hero-frame">
+          <div class="hero-inner">
+            <video autoplay muted loop playsinline preload="auto" poster="poster.jpg">
+              <source src="header_video.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           LOGOS
+           To add a logo, replace the <span> with an image, e.g.
+           <img src="logos/titleist.png" alt="Titleist">
+           Move a logo by changing --x (left) and --y (top).
+           ===================================================== -->
+      <section class="logos-section" aria-labelledby="logos-title">
+        <h2 class="heading section-title reveal" id="logos-title">worked with, featured by, and seen in:</h2>
+        <ul class="logos" data-stagger>
+          <li class="reveal" style="--x:10%; --y:0; --w:5.29rem"><img src="logos/golf-channel.png" alt="Golf Channel"></li>
+          <li class="reveal" style="--x:30%; --y:0; --w:6.65rem"><img src="logos/golfweek.png" alt="Golfweek"></li>
+          <li class="reveal" style="--x:50%; --y:0; --w:3.63rem"><img src="logos/golf-digest.png" alt="Golf Digest"></li>
+          <li class="reveal" style="--x:70%; --y:0; --w:2.00rem"><img src="logos/no-laying-up.png" alt="No Laying Up"></li>
+          <li class="reveal" style="--x:90%; --y:0; --w:4.07rem"><img src="logos/skratch.png" alt="Skratch"></li>
+          <li class="reveal" style="--x:20%; --y:33.3; --w:2.92rem"><img src="logos/manors.png" alt="Manors"></li>
+          <li class="reveal" style="--x:40%; --y:33.3; --w:3.52rem"><img src="logos/vice-golf.png" alt="Vice Golf"></li>
+          <li class="reveal" style="--x:60%; --y:33.3; --w:3.42rem"><img src="logos/del-campo.png" alt="Del Campo"></li>
+          <li class="reveal" style="--x:80%; --y:33.3; --w:6.80rem"><img src="logos/golf-pride.png" alt="Golf Pride"></li>
+          <li class="reveal" style="--x:10%; --y:66.7; --w:2.29rem"><img src="logos/pga-tour.png" alt="PGA Tour"></li>
+          <li class="reveal" style="--x:30%; --y:66.7; --w:3.81rem"><img src="logos/good-good.png" alt="Good Good Golf"></li>
+          <li class="reveal" style="--x:50%; --y:66.7; --w:3.47rem"><img src="logos/travelers-championship.png" alt="Travelers Championship"></li>
+          <li class="reveal" style="--x:70%; --y:66.7; --w:6.15rem"><img src="logos/fairgame.png" alt="Fairgame"></li>
+          <li class="reveal" style="--x:90%; --y:66.7; --w:6.44rem"><img src="logos/random-golf-club.png" alt="Random Golf Club"></li>
+          <li class="reveal" style="--x:20%; --y:100; --w:6.56rem"><img src="logos/fujikura.png" alt="Fujikura"></li>
+          <li class="reveal" style="--x:40%; --y:100; --w:4.62rem"><img src="logos/goop.png" alt="goop"></li>
+          <li class="reveal" style="--x:60%; --y:100; --w:6.72rem"><img src="logos/cabot.png" alt="Cabot"></li>
+          <li class="reveal" style="--x:80%; --y:100; --w:3.55rem"><img src="logos/x-golf.png" alt="X Golf"></li>
+        </ul>
+      </section>
+
+      <!-- =====================================================
+           WHAT I DO: Venn diagram
+           Edit the text inside each <tspan> line. Each block is centred on
+           the x/y of its <text>, so lines stay centred as you edit them.
+           ===================================================== -->
+      <section class="venn-section" id="what-we-do" aria-labelledby="venn-title">
+        <h2 class="heading section-title reveal" id="venn-title">what I do:</h2>
+        <div class="venn" data-venn>
+          <svg viewBox="0 12 640 564" role="img" aria-labelledby="venn-desc">
+            <desc id="venn-desc">Three overlapping circles: short form content, long form content and UGC, with “winning digital strategy” at the centre where all three meet.</desc>
+            <path d="M195 13 A187 187 0 1 1 195 387 A187 187 0 1 1 195 13"/>
+            <path d="M443 13 A187 187 0 1 1 443 387 A187 187 0 1 1 443 13"/>
+            <path d="M319 200 A187 187 0 1 1 319 574 A187 187 0 1 1 319 200"/>
+
+            <text class="t1" text-anchor="middle" dominant-baseline="central" x="154" y="139">
+              <tspan x="154" dy="-2.4em">memorable short</tspan>
+              <tspan x="154" dy="1.2em">form content for</tspan>
+              <tspan x="154" dy="1.2em">reach &amp; virality</tspan>
+              <tspan x="154" dy="1.2em">without sacrificing</tspan>
+              <tspan x="154" dy="1.2em">brand quality</tspan>
+            </text>
+
+            <text class="t2" text-anchor="middle" dominant-baseline="central" x="484" y="139">
+              <tspan x="484" dy="-3.0em">thoughtfully</tspan>
+              <tspan x="484" dy="1.2em">produced long</tspan>
+              <tspan x="484" dy="1.2em">form content for</tspan>
+              <tspan x="484" dy="1.2em">developing a deep</tspan>
+              <tspan x="484" dy="1.2em">connection with</tspan>
+              <tspan x="484" dy="1.2em">target audiences</tspan>
+            </text>
+
+            <text class="center" text-anchor="middle" dominant-baseline="central" x="319" y="251">
+              <tspan x="319" dy="-1.2em">winning</tspan>
+              <tspan x="319" dy="1.2em">digital</tspan>
+              <tspan x="319" dy="1.2em">strategy</tspan>
+            </text>
+
+            <text class="t3" text-anchor="middle" dominant-baseline="central" x="319" y="457.8">
+              <tspan x="319" dy="-1.2em">high performance UGC</tspan>
+              <tspan x="319" dy="1.2em">for efficiently driving revenue</tspan>
+              <tspan x="319" dy="1.2em">from paid ad spend</tspan>
+            </text>
+          </svg>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           SELECTED PROJECTS
+           For each project:
+             href     = link to the content (YouTube, Instagram, etc.)
+             <video>  = looping preview (projects/project-1.mp4 etc.,
+                        square 720 x 720, no audio, with a matching .jpg)
+           Copy a whole <article> block to add more projects.
+           ===================================================== -->
+      <section class="projects-section" id="portfolio" aria-labelledby="projects-title">
+        <h2 class="heading section-title reveal" id="projects-title">selected projects:</h2>
+        <div class="projects" data-stagger>
+
+          <article class="project reveal">
+            <a class="project-card" href="https://www.youtube.com/watch?v=9fgZdBqh0vA&amp;t=60s" target="_blank" rel="noopener" aria-label="Watch Play It As It Lies on YouTube">
+              <video src="projects/project-1.mp4" poster="projects/project-1.jpg" autoplay muted loop playsinline preload="auto"></video>
+            </a>
+            <h3 class="heading">“Play It As It Lies”</h3>
+            <p class="project-type">Brand Film for MANORS Golf Apparel</p>
+            <p>Travel-based brand film shot on location in Scotland.<br>Daily short-form updates posted to social media.<br>Shot on VHS-C.</p>
+            <p class="metrics">1M+ cumulative social views + <a class="text-link" href="https://www.youtube.com/watch?v=TLNF1BFY5fw&amp;t=108s" target="_blank" rel="noopener">dedicated No Laying Up podcast episode</a>.</p>
+          </article>
+
+          <article class="project reveal">
+            <div class="project-card">
+              <video src="projects/project-2.mp4" poster="projects/project-2.jpg" autoplay muted loop playsinline preload="auto"></video>
+            </div>
+            <h3 class="heading">GOLF CAMP</h3>
+            <p class="project-type">Live Event + Brand Activation</p>
+            <p>Co-hosted GOLF CAMP NYC with Del Campo.<br>Experiential pop-up shop event around the Ryder Cup.</p>
+            <p class="metrics">12 participating brands, including Johnnie Walker.</p>
+          </article>
+
+          <article class="project reveal">
+            <a class="project-card" href="https://www.youtube.com/watch?v=nH4c4siR1gc" target="_blank" rel="noopener" aria-label="Watch Searching for Real Golf on YouTube">
+              <video src="projects/project-3.mp4" poster="projects/project-3.jpg" autoplay muted loop playsinline preload="auto"></video>
+            </a>
+            <h3 class="heading">“Searching for Real Golf”</h3>
+            <p class="project-type">Video Series</p>
+            <p>Ongoing exploration of cultural topics related to golf.<br>Produced, written, filmed, color graded and edited in house.</p>
+          </article>
+
+          <article class="project reveal">
+            <a class="project-card" href="https://www.youtube.com/watch?v=acN9xT5hG0M&amp;t=2s" target="_blank" rel="noopener" aria-label="Watch Learning to Surf, Remembering to Golf on YouTube">
+              <video src="projects/project-4.mp4" poster="projects/project-4.jpg" autoplay muted loop playsinline preload="auto"></video>
+            </a>
+            <h3 class="heading">“Learning to Surf, Remembering to Golf”</h3>
+            <p class="project-type">Short Film</p>
+            <p>Shot on location in Cocoa Beach, Florida.<br>A short film about golf and surfing.<br>Shot on Sony Handycam.</p>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- =====================================================
+           ABOUT
+           Replace the text below with your bio. To add a photo,
+           upload it (e.g. about.jpg) and swap the placeholder span
+           for: <img src="about.jpg" alt="Severiano Saiz">
+           ===================================================== -->
+      <section class="about-section" id="about" aria-labelledby="about-title">
+        <h2 class="heading section-title reveal" id="about-title">about:</h2>
+        <div class="about">
+          <div class="about-photo reveal">
+            <img src="about.jpg" alt="Severiano Saiz walking a links course by the sea, carrying his golf bag" width="1200" height="1500">
+          </div>
+          <div class="about-text reveal">
+            <p>Entrepreneur + content creator + digital marketing expert.</p>
+            <p>Founder of <a class="text-link" href="https://www.course-maps.com" target="_blank" rel="noopener">Course Maps</a> + <a class="text-link" href="https://www.instagram.com/dumb_old_cars/" target="_blank" rel="noopener">@dumb_old_cars</a></p>
+            <p>6+ years of self-employment, $2M+ in revenue, cumulatively managed mid-six figures of paid ad spend.</p>
+            <p>Self-taught creative. I make content that performs without selling out to the whims of the algorithm.</p>
+            <p>UConn graduate. Former male model. Currently living in Lisbon, Portugal with my wife Kaley. 3 handicap.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           CONTACT FORM
+           Messages are sent to seve@course-maps.com through
+           FormSubmit (formsubmit.co). The very first message
+           triggers a one-time activation email to that address:
+           click the link in it and the form is live.
+           ===================================================== -->
+      <section class="contact" id="contact">
+        <h2 class="heading section-title reveal">let’s make content together.</h2>
+        <form class="reveal" action="https://formsubmit.co/ajax/seve@course-maps.com" method="POST" data-form>
+          <input type="hidden" name="_subject" value="New message from your website">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="text" name="name" placeholder="Name" aria-label="Name" required>
+          <input type="email" name="email" placeholder="Email" aria-label="Email" required>
+          <textarea name="message" placeholder="Message" aria-label="Message" required></textarea>
+          <button type="submit">Send message</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="bottom-rule"></div>
+
+  <!-- =====================================================
+       FOOTER: put your social links in the href="" values
+       ===================================================== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <ul class="socials">
+        <li><a href="https://www.instagram.com/coursemaps/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg class="ig" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle class="dot" cx="17.3" cy="6.7" r="1.1"/></svg></a></li>
+        <li><a href="https://www.linkedin.com/in/severianosaiz/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11.25H3V9.75zm6.5 0h3.8v1.55h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5c0-1.2 0-2.75-1.67-2.75-1.68 0-1.94 1.3-1.94 2.66V21h-4V9.75z"/></svg></a></li>
+        <li><a href="https://www.youtube.com/@CourseMaps" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3 3 0 0 0-2.1-2.1C19.5 4 12 4 12 4s-7.5 0-9.4.4A3 3 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3 3 0 0 0 2.1 2.1C4.5 20 12 20 12 20s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.5.5-5.5s0-3.6-.5-5.5zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a></li>
+      </ul>
+      <p class="footer-text" style="margin:0">© <span data-year></span> Severiano Saiz</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Turn on animations only when JavaScript is running
+  document.documentElement.classList.add("js");
+
+  document.querySelector("[data-year]").textContent = new Date().getFullYear();
+
+  // Size every heading so the tagline exactly fills the content column,
+  // while the name keeps a clear gap before the tagline.
+  var root = document.documentElement;
+  var mast = document.querySelector("[data-fit]");
+  var nameEl = mast.querySelector(".name");
+  var tagEl = mast.querySelector(".tagline");
+  function fitMasthead() {
+    if (window.innerWidth <= 720) { root.style.removeProperty("--head-size"); return; }
+    root.style.setProperty("--head-size", "100px");
+    var tagWidth = tagEl.getBoundingClientRect().width;
+    var nameWidth = nameEl.getBoundingClientRect().width;
+    var columnWidth = mast.clientWidth * 0.79;          // content column (100% - sidebar)
+    var sidebarWidth = mast.clientWidth * 0.21;
+    var bySize = 100 * columnWidth / tagWidth;
+    var byName = 100 * (sidebarWidth - 32) / nameWidth;  // keep at least 32px buffer
+    var maxSize = parseFloat(getComputedStyle(root).getPropertyValue("--head-max")) || 24;
+    var size = Math.min(bySize, byName, maxSize);
+    root.style.setProperty("--head-size", Math.floor(size * 10) / 10 + "px");
+  }
+  fitMasthead();
+  window.addEventListener("resize", fitMasthead);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMasthead);
+
+  // Keep the Venn lines exactly 1 screen pixel thick at any size
+  var venn = document.querySelector("[data-venn]");
+  var vennSvg = venn.querySelector("svg");
+  function setVennStroke() {
+    var scale = vennSvg.getBoundingClientRect().width / 640;
+    if (scale > 0) venn.style.setProperty("--venn-stroke", (1.25 / scale).toFixed(3));
+  }
+  setVennStroke();
+  window.addEventListener("resize", setVennStroke);
+  var vennPaths = venn.querySelectorAll("path");
+  vennPaths[vennPaths.length - 1].addEventListener("transitionend", function (e) {
+    if (e.target === vennPaths[vennPaths.length - 1]) venn.classList.add("done");
+  });
+
+  // Highlight “winning digital strategy” in the middle of the Venn,
+  // sweeping in line by line just as that text fades in.
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var textDelays = { t1: 1.4, t2: 1.6, t3: 1.8, center: 2.3 };
+  function buildHighlights() {
+    var old = vennSvg.querySelector(".venn-hl");
+    if (old) old.remove();
+    var g = document.createElementNS(SVGNS, "g");
+    g.setAttribute("class", "venn-hl" + (venn.classList.contains("in") ? " instant" : ""));
+    g.setAttribute("aria-hidden", "true");
+    vennSvg.querySelectorAll("text.center").forEach(function (t) {
+      var base = textDelays[t.getAttribute("class")] || 1.4;
+      t.querySelectorAll("tspan").forEach(function (span, k) {
+        var bb = span.getBBox();
+        if (!bb.width) return;
+        var padX = 4, x1 = bb.x - padX, x2 = bb.x + bb.width + padX;
+        var line = document.createElementNS(SVGNS, "line");
+        line.setAttribute("x1", x1); line.setAttribute("x2", x2);
+        line.setAttribute("y1", bb.y + bb.height / 2); line.setAttribute("y2", bb.y + bb.height / 2);
+        line.setAttribute("stroke-width", (bb.height * 0.78).toFixed(2));
+        line.style.setProperty("--len", (x2 - x1).toFixed(2));
+        line.style.setProperty("--delay", (base + k * 0.12).toFixed(2) + "s");
+        g.appendChild(line);
+      });
+    });
+    vennSvg.insertBefore(g, vennSvg.querySelector("text"));
+  }
+  buildHighlights();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(buildHighlights);
+  window.addEventListener("resize", buildHighlights);
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) venn.classList.add("done");
+
+  // "Home" and the name go to the very top of the page
+  document.querySelectorAll("[data-top]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      history.replaceState(null, "", location.pathname);
+    });
+  });
+
+  // Respect "reduce motion": pause the looping project videos
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.querySelectorAll(".project-card video").forEach(function (v) { v.removeAttribute("autoplay"); v.pause(); });
+  }
+
+  // Stagger children: each item waits a little longer than the last
+  document.querySelectorAll("[data-stagger]").forEach(function (group) {
+    Array.from(group.children).forEach(function (child, i) {
+      child.style.setProperty("--delay", (i * 0.12) + "s");
+    });
+  });
+
+  // Reveal elements as they scroll into view
+  var targets = document.querySelectorAll(".reveal, .top-rule, .bottom-rule, [data-venn]");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
+    targets.forEach(function (el) { io.observe(el); });
+  } else {
+    targets.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  // Highlight the nav link for the section on screen.
+  // Above the projects, "Home" is highlighted; it updates both ways as you scroll.
+  var links = document.querySelectorAll(".nav a");
+  var sections = ["portfolio", "about", "contact"].map(function (id) { return document.getElementById(id); });
+  var navTicking = false;
+  function updateNav() {
+    var marker = window.innerHeight * 0.5;
+    var current = "top";
+    sections.forEach(function (sec) {
+      if (sec && sec.getBoundingClientRect().top <= marker) current = sec.id;
+    });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = "contact";
+    links.forEach(function (a) { a.classList.toggle("active", a.getAttribute("href") === "#" + current); });
+    navTicking = false;
+  }
+  window.addEventListener("scroll", function () {
+    if (!navTicking) { requestAnimationFrame(updateNav); navTicking = true; }
+  }, { passive: true });
+  window.addEventListener("resize", updateNav);
+  updateNav();
+
+  // Send the contact form to seve@course-maps.com without leaving the page
+  var form = document.querySelector("[data-form]");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var status = form.querySelector(".form-status");
+    var failed = "Message didn’t send. Please email seve@course-maps.com directly.";
+    status.textContent = "Sending…";
+    fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data && String(data.success) === "true") { form.reset(); status.textContent = "Message sent. Thanks, I’ll be in touch soon."; }
+        else { status.textContent = failed; }
+      })
+      .catch(function () { status.textContent = failed; });
+  });
+</script>
+</body>
+</html>
